@@ -1,0 +1,54 @@
+enclave {
+
+    from "sgx_tstdc.edl" import *;
+    
+    
+    trusted {
+
+        public void ecall_init([in,size=len] unsigned char *keyF, size_t len);
+        public void ecall_addDoc([in, size=id_length] char *doc_id, size_t id_length, [in, size=content_length] char *content, int content_length);
+        public void ecall_delDoc([in, size=id_length] char *doc_id, size_t id_length);
+        public void ecall_search([in, size=len] const char *keyword, size_t len);
+        public void ecall_test([in, size = length_content] char* encrypted_content, size_t length_content);
+        public void ecall_hash_sha256_test([in,size = message_length] unsigned char* message,size_t message_length);
+        public void ecall_get_Proof_ID_u([in,size = id_len]char* ID_u,int id_len,[in,size = h_u_len]unsigned char* h_u,int h_u_len);
+        public void ecall_get_Proof_w([in,size = w_len]char* w,int w_len,[in,size = h_w_len]unsigned char* h_w,int h_w_len);
+        public void ecall_Enclave_search([in,size = w_len]char* w,int w_len,
+                                            [in,size = id_u_len]char* id_u,int id_u_len,
+                                            [in,size = bs_w_out_len]unsigned char* bs_w_out,int bs_w_out_len,
+                                            [in,size = bs_u_out_len]unsigned char* bs_u_out,int bs_u_out_len,
+                                            [in,size = K_w_len]unsigned char* K_w,int K_w_len,
+                                            [in,size = K_u_len]unsigned char* K_u,int K_u_len,
+                                            int c_w,int c_u);
+    };
+
+    untrusted {
+        void ocall_test2([in, size = length_content] char* encrypted_content, size_t length_content);
+        void ocall_test([in, count = 1] int* mint,[in,size = 1] char* mchar,[in,size=len] char* mstring,int len);
+        void ocall_print_string([in, string] const char *str);
+        void ocall_print_bytes([in,size = len]unsigned char* ptr,uint32_t len);
+        void ocall_transfer_encrypted_entries([in, count= pair_count, size=rand_size] const void *t1_u_arr, 
+									            [in, count= pair_count, size=rand_size] const void *t1_v_arr, 
+									            [in, count= pair_count, size=rand_size] const void *t2_u_arr, 
+									            [in, count= pair_count, size=rand_size] const void *t2_v_arr,
+									            int pair_count, int rand_size); 
+        void ocall_retrieve_encrypted_doc([in, size=del_id_len] const char *del_id, size_t del_id_len, 
+                                          [out, size=maxLen] unsigned char *encrypted_content, size_t maxLen,
+                                          [out, count=int_len] int *length_content, size_t int_len);
+        
+        void ocall_del_encrypted_doc([in, size=del_id_len] const char *del_id, size_t del_id_len);
+        
+        void ocall_retrieve_M_c([in, size=_u_prime_size] unsigned char * _u_prime, size_t _u_prime_size,
+                                     [out, size=maxLen] unsigned char *_v_prime, size_t maxLen,
+                                     [out, count=int_len] int *_v_prime_size, size_t int_len);
+        
+        void ocall_del_M_c_value([in, size=_u_prime_size] const unsigned char *_u_prime, size_t _u_prime_size);
+
+        void ocall_query_tokens_entries([in, count= pair_count, size=rand_size] const void *Q_w_u_arr,
+                               [in, count= pair_count, size=rand_size] const void *Q_w_id_arr,
+                               int pair_count, int rand_size);
+
+        void ocall_dec_e([in,string]unsigned char* sum_e,[in,out,string]unsigned char* res,int dec);
+        void ocall_send_Proof_res([in,size = len]unsigned char* Proof_res,int len);
+    };
+};
