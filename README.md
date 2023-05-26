@@ -1,6 +1,5 @@
 # File Structure
 VKSA^*/
-
 ├── README.md                                       //  introduction
 ├── common                                          //  some Parameter
 │   ├── config.h                                    
@@ -31,9 +30,13 @@ Email-enron: https://www.cs.cmu.edu/./enron/
 
 # Prepare Environment
 C++11
+
 Install Intel(R) SGX SDK for Linux* OS
+
 openssl
+
 crypto
+
 gmp
 
 # Building Procedure
